@@ -1,14 +1,8 @@
-name: build
-
+name: ci
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*'
-  pull_request:
-    branches:
-      - 'main'
 
 jobs:
   docker:
@@ -42,4 +36,4 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
+          
