@@ -8,6 +8,11 @@ on:
   pull_request:
     branches:
       - 'main'
+env:
+  APP_REGISTRY: c8n.io
+  APP_REPO: myspotontheweb
+  APP_NAME: gitops-demo-app1
+  GITOPS_REPO: myspotontheweb/gitops-workloads
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
@@ -19,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: c8n.io/myspotontheweb/gitops-demo-app1
+          images: ${APP_REGISTRY}/${APP_REPO}/${APP_NAME}
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
@@ -43,13 +48,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          repository: myspotontheweb/gitops-workloads
+          repository: ${GITOPS_REPO}
           token: ${{secrets.REPO_TOKEN}}
       - uses: imranismail/setup-kustomize@v1
         with:
           kustomize-version: 4.0.0
-      - run: kustomize edit set image c8n.io/myspotontheweb/gitops-demo-app1:${GITHUB_REF#refs/*/}
-        working-directory: apps/gitops-demo-app1/overlays/integration
+      - run: kustomize edit set image ${APP_REGISTRY}/${APP_REPO}/${APP_NAME}:${GITHUB_REF#refs/*/}
+        working-directory: apps/${APP_NAME}/overlays/integration
       - run: |
           git config user.email "gitops@myspotontheweb.com"
           git config user.name "gitops"
