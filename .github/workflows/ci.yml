@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: https://github.com/myspotontheweb/gitops-workloads.git
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.REPO_TOKEN}}
       - uses: imranismail/setup-kustomize@v1
         with:
           kustomize-version: 4.0.0
