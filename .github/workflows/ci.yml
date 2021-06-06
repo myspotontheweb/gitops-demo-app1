@@ -24,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${APP_REGISTRY}/${APP_REPO}/${APP_NAME}
+          images: ${{env.APP_REGISTRY}/${{env.APP_REPO}}/${{env.APP_NAME}}
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
@@ -48,13 +48,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          repository: ${GITOPS_REPO}
+          repository: ${{env.GITOPS_REPO}}
           token: ${{secrets.REPO_TOKEN}}
       - uses: imranismail/setup-kustomize@v1
         with:
           kustomize-version: 4.0.0
-      - run: kustomize edit set image ${APP_REGISTRY}/${APP_REPO}/${APP_NAME}:${GITHUB_REF#refs/*/}
-        working-directory: apps/${APP_NAME}/overlays/integration
+      - run: kustomize edit set image ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}:${GITHUB_REF#refs/*/}
+        working-directory: apps/${{env.APP_NAME}}/overlays/integration
       - run: |
           git config user.email "gitops@myspotontheweb.com"
           git config user.name "gitops"
