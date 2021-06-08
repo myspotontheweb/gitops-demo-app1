@@ -16,13 +16,13 @@ env:
   GITOPS_REPO: myspotontheweb/gitops-workloads
 
 jobs:
+
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Docker meta
         id: meta
@@ -53,15 +53,40 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
 
-  deploy:
+  deploy-dev:
     if: contains(github.ref, 'tags')
     runs-on: ubuntu-latest
     needs:
       - build
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{env.GITOPS_REPO}}
+          token: ${{secrets.REPO_TOKEN}}
+
+      - uses: imranismail/setup-kustomize@v1
+        with:
+          kustomize-version: 4.0.0
+
+      - run: kustomize edit set image ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}:sha-$(git rev-parse --short $GITHUB_SHA)
+        working-directory: apps/${{env.APP_NAME}}/overlays/dev
+
+      - run: |
+          git config user.email "gitops@myspotontheweb.com"
+          git config user.name "gitops"
+          git commit -am "Gitops update"
+          git push
+
+
+  deploy-release:
+    if: contains(github.ref, 'tags')
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+
+      - uses: actions/checkout@v2
         with:
           repository: ${{env.GITOPS_REPO}}
           token: ${{secrets.REPO_TOKEN}}
@@ -71,7 +96,7 @@ jobs:
           kustomize-version: 4.0.0
 
       - run: kustomize edit set image ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}:${GITHUB_REF#refs/*/}
-        working-directory: apps/${{env.APP_NAME}}/overlays/integration
+        working-directory: apps/${{env.APP_NAME}}/overlays/test
 
       - run: |
           git config user.email "gitops@myspotontheweb.com"
