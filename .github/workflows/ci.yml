@@ -11,7 +11,7 @@ on:
 
 env:
   APP_REGISTRY: c8n.io
-  APP_REPO: myspotontheweb
+  APP_REPO: moconnorglobalizationpartnerscom
   APP_NAME: gitops-demo-app1
   GITOPS_REPO: myspotontheweb/gitops-workloads
 
