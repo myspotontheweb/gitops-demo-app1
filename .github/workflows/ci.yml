@@ -10,9 +10,10 @@ on:
       - 'main'
 
 env:
-  APP_REGISTRY: https://index.docker.io/v1
+  APP_REGISTRY:
   APP_REPO: myspotontheweb
   APP_NAME: gitops-demo-app1
+  APP_IMAGE: ${{env.APP_REGISTRY}}${{env.APP_REPO}}/${{env.APP_NAME}}
   GITOPS_REPO: myspotontheweb/gitops-workloads
 
 jobs:
@@ -27,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}
+          images: ${{env.APP_IMAGE}}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -67,7 +68,7 @@ jobs:
         with:
           kustomize-version: 4.0.0
 
-      - run: kustomize edit set image ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}:sha-$(git rev-parse --short $GITHUB_SHA)
+      - run: kustomize edit set image ${{env.APP_IMAGE}}:sha-$(git rev-parse --short $GITHUB_SHA)
         working-directory: apps/${{env.APP_NAME}}/overlays/dev
 
       - run: |
@@ -93,7 +94,7 @@ jobs:
         with:
           kustomize-version: 4.0.0
 
-      - run: kustomize edit set image ${{env.APP_REGISTRY}}/${{env.APP_REPO}}/${{env.APP_NAME}}:${GITHUB_REF#refs/*/}
+      - run: kustomize edit set image ${{env.APP_IMAGE}}:${GITHUB_REF#refs/*/}
         working-directory: apps/${{env.APP_NAME}}/overlays/test
 
       - run: |
