@@ -10,8 +10,8 @@ on:
       - 'main'
 
 env:
-  APP_REGISTRY: c8n.io
-  APP_REPO: moconnorglobalizationpartnerscom
+  APP_REGISTRY: https://index.docker.io/v1
+  APP_REPO: myspotontheweb
   APP_NAME: gitops-demo-app1
   GITOPS_REPO: myspotontheweb/gitops-workloads
 
