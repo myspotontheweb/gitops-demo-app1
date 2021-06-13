@@ -10,7 +10,7 @@ on:
       - 'main'
 
 env:
-  APP_REGISTRY: ""
+  APP_REGISTRY: "c8n.io/"
   APP_REPO: myspotontheweb
   APP_NAME: gitops-demo-app1
   APP_IMAGE: ${{env.APP_REGISTRY}}${{env.APP_REPO}}/${{env.APP_NAME}}
