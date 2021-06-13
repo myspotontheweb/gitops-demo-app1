@@ -71,7 +71,8 @@ jobs:
       - run: |
           git config user.email "gitops@myspotontheweb.com"
           git config user.name "gitops"
-          git commit -am "Gitops update"
+          git commit -am "Gitops update to $APP_NAME"
+          git pull --rebase
           git push
 
 
@@ -97,6 +98,7 @@ jobs:
       - run: |
           git config user.email "gitops@myspotontheweb.com"
           git config user.name "gitops"
-          git commit -am "Gitops update"
+          git commit -am "Gitops update to $APP_NAME"
+          git pull --rebase
           git push
 
