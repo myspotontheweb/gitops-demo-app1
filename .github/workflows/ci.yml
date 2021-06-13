@@ -10,9 +10,8 @@ on:
       - 'main'
 
 env:
-  APP_REPO: myspotontheweb
   APP_NAME: gitops-demo-app1
-  APP_IMAGE: ${{env.APP_REPO}}/${{env.APP_NAME}}
+  APP_IMAGE: myspotontheweb/gitops-demo-app1
   GITOPS_REPO: myspotontheweb/gitops-workloads
 
 jobs:
